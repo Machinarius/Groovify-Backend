@@ -1,21 +1,7 @@
+import * as Koa from "koa";
 import { injectable, inject } from "tsyringe";
-import { nameof } from "ts-simple-nameof";
 
 import IJWTValidationBackend from "./IJWTValidationBackend";
-
-export interface AuthRequestContext {
-    request: {
-        header: {
-            [key: string]: any
-        }
-    },
-    response: IRejectedRequest
-}
-
-interface IRejectedRequest {
-    status: number,
-    body: string | object
-}
 
 @injectable()
 export default class AuthenticationMiddleware {
@@ -31,9 +17,7 @@ export default class AuthenticationMiddleware {
         this.rejectRequest = this.rejectRequest.bind(this);
     }
 
-    public async validateJWTToken(
-        context: AuthRequestContext, 
-        next: () => Promise<void>): Promise<void> {
+    public async validateJWTToken(context: Koa.Context, next: Koa.Next): Promise<void> {
         let authHeaderValue = context.request.header["authorization"] as string;
         if (!authHeaderValue) {
             this.rejectRequest(context.response);
@@ -55,7 +39,7 @@ export default class AuthenticationMiddleware {
         await next();
     }
 
-    private rejectRequest(response: IRejectedRequest) {
+    private rejectRequest(response: Koa.Response) {
         response.status = 401;
         response.body = "Not Authorized";
     }

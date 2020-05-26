@@ -2,11 +2,11 @@ import { mock, instance, when } from "ts-mockito";
 import { stub } from "sinon";
 import { expect } from "chai";
 
-import AuthenticationMiddleware, { AuthRequestContext } from "../src/Authentication/AuthenticationMiddleware";
+import AuthenticationMiddleware from "../src/Authentication/AuthenticationMiddleware";
 import IJWTValidationBackend from "../src/Authentication/IJWTValidationBackend";
 
 describe("Authentication Middleware", () => {
-    var fakeContext: AuthRequestContext;
+    var fakeContext: any;
     var mockBackend: IJWTValidationBackend;
     var subject: AuthenticationMiddleware;
 
