@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "mocha -r ts-node/register --config ./.mocharc.js tests/**/*.test.ts",
+    "test": "mocha -r ts-node/register -r core-js/features/reflect tests/**/*.test.ts",
     "start": "node -r ts-node/register src/index.ts"
   },
   "dependencies": {
