@@ -14,33 +14,18 @@ export default class AuthenticationMiddleware {
         }
 
         this.validateJWTToken = this.validateJWTToken.bind(this);
-        this.rejectRequest = this.rejectRequest.bind(this);
     }
 
     public async validateJWTToken(context: Koa.Context, next: Koa.Next): Promise<void> {
         let authHeaderValue = context.request.header["authorization"] as string;
-        if (!authHeaderValue) {
-            this.rejectRequest(context.response);
-            return;
-        }
-
-        if (!authHeaderValue.startsWith("Bearer")) {
-            this.rejectRequest(context.response);
-            return;
-        }
-
-        let jwtString = authHeaderValue.substr("Bearer ".length);
-        let jwtValidated = await this.backend.validateJWTString(jwtString);
-        if (!jwtValidated) {
-            this.rejectRequest(context.response);
-            return;
+        if (authHeaderValue && authHeaderValue.startsWith("Bearer")) {
+            let jwtString = authHeaderValue.substr("Bearer ".length);
+            let validationResult = await this.backend.validateJWTString(jwtString);
+            if (validationResult.success) {
+                context.state.authTicket = validationResult.ticket!;
+            }
         }
         
         await next();
-    }
-
-    private rejectRequest(response: Koa.Response) {
-        response.status = 401;
-        response.body = "Not Authorized";
     }
 }
