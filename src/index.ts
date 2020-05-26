@@ -5,6 +5,9 @@ dotenv.config();
 import "core-js/features/reflect";
 import { container as rootContainer } from "tsyringe";
 
+import ApolloServerFactory from "./GraphQLTypes";
+import GraphiQLMiddlewareFactory from "./GraphQLTypes/GraphiQL";
+
 import DependencyRegistry from "./DependencyRegistry";
 DependencyRegistry.registerTypes(rootContainer);
 
@@ -12,13 +15,22 @@ import AuthenticationMiddleware from "./Authentication/AuthenticationMiddleware"
 let authMiddleware = rootContainer.resolve(AuthenticationMiddleware);
 
 let app = new Koa();
-app.use(authMiddleware.validateJWTToken);
+let ApolloServer = ApolloServerFactory({});
+let GraphiQLMiddleware = GraphiQLMiddlewareFactory(ApolloServer.graphqlPath);
 
-app.use(ctx => {
-    ctx.response.status = 200;
-    ctx.response.body = "Authenticated";
+app.use(async (context, next) => {
+    if (context.path !== "/") {
+        await next();
+        return;
+    }
+
+    GraphiQLMiddleware(context, next);
 });
+app.use(authMiddleware.validateJWTToken);
+ApolloServer.applyMiddleware({ app });
 
 let port = process.env.PORT || 3000;
-console.log("Listening on port " + port);
-app.listen(port);
+app.listen({ port }, () => {
+    console.log("Listening on port " + port);
+    console.log("Apollo available on " + ApolloServer.graphqlPath);
+});
