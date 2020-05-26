@@ -1,0 +1,13 @@
+type UserProfile {
+    id: ID!
+    name: String!
+    emailAddress: String!
+    pictureId: ID!
+}
+
+type Playlist {
+    id: ID!
+    owner: UserProfile!
+    name: String!
+    songs: [Song]!
+}

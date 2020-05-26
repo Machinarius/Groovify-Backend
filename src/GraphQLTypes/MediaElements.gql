@@ -1,0 +1,22 @@
+type Song {
+    id: ID!
+    title: String!
+    artists: [Artist]!
+    coverId: ID!
+    streamId: ID!
+    album: Album!
+    lengthInSeconds: Int!
+    positionInAlbum: Int!
+}
+
+type Artist {
+    id: ID!
+    name: String!
+    coverId: ID!
+}
+
+type Album {
+    id: ID!
+    name: String!
+    coverId: String!
+}
