@@ -6,7 +6,6 @@ import "core-js/features/reflect";
 import { container as rootContainer } from "tsyringe";
 
 import ApolloServerFactory from "./GraphQLTypes/ApolloServerFactory";
-import GraphiQLMiddlewareFactory from "./GraphQLTypes/GraphiQL";
 
 import DependencyRegistry from "./DependencyRegistry";
 DependencyRegistry.registerTypes(rootContainer);
@@ -16,18 +15,17 @@ let authMiddleware = rootContainer.resolve(AuthenticationMiddleware);
 
 let app = new Koa();
 let ApolloServer = ApolloServerFactory({});
-let GraphiQLMiddleware = GraphiQLMiddlewareFactory(ApolloServer.graphqlPath);
 
+app.use(authMiddleware.validateJWTToken);
+ApolloServer.applyMiddleware({ app });
 app.use(async (context, next) => {
-    if (context.path !== "/") {
-        await next();
+    if (context.path == "/") {
+        context.redirect(ApolloServer.graphqlPath);
         return;
     }
 
-    GraphiQLMiddleware(context, next);
+    await next();
 });
-app.use(authMiddleware.validateJWTToken);
-ApolloServer.applyMiddleware({ app });
 
 let port = process.env.PORT || 3000;
 app.listen({ port }, () => {
