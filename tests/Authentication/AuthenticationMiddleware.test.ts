@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 import AuthenticationMiddleware from "../../src/Authentication/AuthenticationMiddleware";
 import IJWTValidationBackend from "../../src/Authentication/IJWTValidationBackend";
-import { AuthenticationTicket } from "../../src/Authentication/AuthenticationTicket";
+import AuthenticationTicket from "../../src/Authentication/AuthenticationTicket";
 
 describe("Authentication Middleware", () => {
     var fakeContext: any;
@@ -47,10 +47,10 @@ describe("Authentication Middleware", () => {
 
     it("Must attach the AuthenticationTicket to the context and call the next middleware if the backend accepts the supplied token", async () => {
         let fakeTicket: AuthenticationTicket = {
-            userId: "asd",
+            id: "asd",
             emailAddress: "asd@asd.com",
             expirationDate: new Date(),
-            externalPictureURI: "http://asd/asd.jpg",
+            pictureURI: "http://asd/asd.jpg",
             name: "ASDUser"
         };
 

@@ -1,7 +1,7 @@
-export interface AuthenticationTicket {
-    userId: string;
+export default interface AuthenticationTicket {
+    id: string;
     expirationDate: Date;
     emailAddress: string;
     name: string;
-    externalPictureURI: string;
+    pictureURI: string;
 }

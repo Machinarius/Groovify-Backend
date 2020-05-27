@@ -5,7 +5,7 @@ dotenv.config();
 import "core-js/features/reflect";
 import { container as rootContainer } from "tsyringe";
 
-import ApolloServerFactory from "./GraphQLTypes";
+import ApolloServerFactory from "./GraphQLTypes/ApolloServerFactory";
 import GraphiQLMiddlewareFactory from "./GraphQLTypes/GraphiQL";
 
 import DependencyRegistry from "./DependencyRegistry";

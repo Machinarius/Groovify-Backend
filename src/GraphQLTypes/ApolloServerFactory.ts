@@ -14,7 +14,11 @@ let schema = gql(schemaText);
 let serverFactory = (resolvers: IResolvers<any, any> | IResolvers<any, any>[]) => 
     new ApolloServer({ 
         typeDefs: schema,
-        resolvers
+        resolvers,
+        context: (config) => {
+            let authTicket = config.ctx.state.authTicket;
+            return { authTicket };
+        }
     });
 
 export default serverFactory;

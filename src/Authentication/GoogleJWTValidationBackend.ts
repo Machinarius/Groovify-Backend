@@ -1,6 +1,6 @@
 import IJWTValidationBackend, { JWTValidationResult } from "./IJWTValidationBackend";
+import AuthenticationTicket from "./AuthenticationTicket";
 import { LoginTicket, OAuth2Client } from "google-auth-library";
-import { AuthenticationTicket } from "./AuthenticationTicket";
 
 export default class GoogleJWTValidationBackend implements IJWTValidationBackend {
     private googleOauthClient: OAuth2Client;
@@ -23,10 +23,10 @@ export default class GoogleJWTValidationBackend implements IJWTValidationBackend
 
         let payload = ticket.getPayload();
         let authTicket: AuthenticationTicket = {
-            userId: payload.sub,
+            id: payload.sub,
             name: payload.name!,
             emailAddress: payload.email!,
-            externalPictureURI: payload.picture,
+            pictureURI: payload.picture,
             expirationDate: new Date(payload.exp * 1000)
         };
 
