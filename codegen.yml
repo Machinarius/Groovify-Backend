@@ -1,0 +1,6 @@
+generates:
+  ./src/GraphQLTypes/Index.ts:
+    schema: src/GraphQLTypes/*.gql
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
