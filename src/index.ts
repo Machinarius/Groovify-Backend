@@ -17,15 +17,7 @@ let app = new Koa();
 let ApolloServer = ApolloServerFactory({});
 
 app.use(authMiddleware.validateJWTToken);
-ApolloServer.applyMiddleware({ app });
-app.use(async (context, next) => {
-    if (context.path == "/") {
-        context.redirect(ApolloServer.graphqlPath);
-        return;
-    }
-
-    await next();
-});
+app.use(ApolloServer.getMiddleware({ path: "/" }));
 
 let port = process.env.PORT || 3000;
 app.listen({ port }, () => {
